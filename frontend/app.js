@@ -221,6 +221,16 @@
 
     // ── Chat ──────────────────────────────────────────────────────────────
 
+    const CHAT_EMPTY_HTML =
+        '<div class="empty-state"><p>Start a conversation with the agent</p>' +
+        '<div class="try-this"><span class="try-this-label">Try this:</span>' +
+        '<div class="try-this-chips">' +
+        '<button class="try-chip" data-prompt="What tools do you have available?">What tools do you have available?</button>' +
+        '<button class="try-chip" data-prompt="Show me the current system status">Show me the current system status</button>' +
+        '<button class="try-chip" data-prompt="Search my memory for recent topics">Search my memory for recent topics</button>' +
+        '<button class="try-chip" data-prompt="Calculate 2^10 + 42">Calculate 2^10 + 42</button>' +
+        '</div></div></div>';
+
     function addChatMessage(role, content) {
         const container = document.getElementById('chat-messages');
         const empty = container.querySelector('.empty-state');
@@ -966,10 +976,17 @@
             }
         });
 
+        document.getElementById('chat-messages').addEventListener('click', (e) => {
+            const chip = e.target.closest('.try-chip');
+            if (chip) {
+                document.getElementById('chat-input').value = chip.dataset.prompt;
+                document.getElementById('chat-input').focus();
+            }
+        });
+
         document.getElementById('new-chat-btn').addEventListener('click', () => {
             state.conversationId = null;
-            document.getElementById('chat-messages').innerHTML =
-                '<div class="empty-state"><p>Start a conversation with the agent</p></div>';
+            document.getElementById('chat-messages').innerHTML = CHAT_EMPTY_HTML;
         });
 
         // Memory
